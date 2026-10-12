@@ -16,7 +16,7 @@ url_api = "https://musicbrainz.org/ws/2"
 
 
 # ------------------------- OBTENER ARTISTAS -------------------------
-def obtener_artistas(limite):
+def obtener_artistas(limite, artistas_guardados):
     artistas = []
     id_vistos = set()
 
@@ -34,9 +34,14 @@ def obtener_artistas(limite):
                 continue
 
             id_vistos.add(id_artista)
+
+            # Omitir artistas enriquecidos anteriormente
+            if id_artista in artistas_guardados:
+                continue
+
             artistas.append((id_artista, nombre))
 
-            if len(artistas) == limite:
+            if len(artistas) >= limite:
                 break
 
     return artistas
@@ -158,7 +163,7 @@ if __name__ == "__main__":
         if archivo_nuevo:
             archivo.writeheader()
 
-        for id_artista, nombre in obtener_artistas(opciones.limite):
+        for id_artista, nombre in obtener_artistas(opciones.limite, artistas_guardados):
             if id_artista in artistas_guardados:
                 continue
 
