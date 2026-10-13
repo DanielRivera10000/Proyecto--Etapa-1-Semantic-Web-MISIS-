@@ -3,7 +3,9 @@
 
 
 # ------------------------- CONSULTA 1 -------------------------
-# Canciones de un artista, lanzamiento, año, duración y género.
+# ¿Qué canciones están asociadas a un artista determinado, 
+# cuáles son los lanzamientos a los que pertenecen y qué información se 
+# encuentra disponible sobre su año, duración y género musical?
 
 PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
 
@@ -33,11 +35,10 @@ WHERE {
 }
 
 ORDER BY ?titulo
-LIMIT 50
-
 
 # ------------------------- CONSULTA 2 -------------------------
-# Canciones con género principal y minoritario.
+# ¿Qué canciones presentan múltiples clasificaciones de género musical, 
+# cuáles son los géneros asociados y qué artistas interpretan dichas canciones?
 
 PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
 
@@ -60,28 +61,28 @@ ORDER BY ?titulo
 
 
 # ------------------------- CONSULTA 5 -------------------------
-# Géneros asociados a un artista mediante su MBID.
+# A partir de un artista seleccionado mediante su identificador de MusicBrainz, 
+# ¿Qué géneros musicales están asociados a dicho artista?
 
 PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
 
-SELECT DISTINCT ?nombreArtista ?nombreGenero
+SELECT DISTINCT ?nombreGenero
 WHERE {
     ?artista music:mbid_artista "2f9ecbed-27be-40e6-abca-6de49d50299e" .
-    ?artista music:nombre_artista ?nombreArtista .
     ?artista music:tieneGenero ?genero .
-
     ?genero music:nombre ?nombreGenero .
 }
-
 ORDER BY ?nombreGenero
 
 
 # ------------------------- CONSULTA 6 -------------------------
-# Diez artistas con más canciones clasificadas como Rock.
+# ¿Cuáles son los diez artistas con mayor cantidad de canciones 
+# registradas dentro de un género musical seleccionado y cuántas canciones tiene cada uno?
 
 PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
 
-SELECT ?nombreArtista (COUNT(DISTINCT ?cancion) AS ?cantidadCanciones)
+SELECT (MIN(?nombre) AS ?nombreArtista)
+       (COUNT(DISTINCT ?cancion) AS ?cantidadCanciones)
 WHERE {
     ?genero music:nombre "Rock" .
 
@@ -89,16 +90,17 @@ WHERE {
     ?cancion music:tieneGeneroPrincipal ?genero .
     ?cancion music:interpretadoPor ?artista .
 
-    ?artista music:nombre_artista ?nombreArtista .
+    ?artista music:nombre_artista ?nombre .
 }
-
-GROUP BY ?artista ?nombreArtista
+GROUP BY ?artista
 ORDER BY DESC(?cantidadCanciones) ?nombreArtista
 LIMIT 10
 
 
+
 # ------------------------- CONSULTA 8 -------------------------
-# Distribución de canciones por género y país o región.
+# ¿Cómo se distribuyen las canciones según su género musical y el país o región de sus artistas, 
+# y cuántas canciones diferentes corresponden a cada combinación?
 
 PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
 
