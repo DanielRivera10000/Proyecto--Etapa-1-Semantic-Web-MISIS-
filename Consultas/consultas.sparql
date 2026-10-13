@@ -1,0 +1,117 @@
+
+# CONSULTAS SPARQL - PROYECTO ETAPA 2 (MISIS)
+
+
+# ------------------------- CONSULTA 1 -------------------------
+# Canciones de un artista, lanzamiento, año, duración y género.
+
+PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
+
+SELECT DISTINCT ?titulo ?nombreArtista ?nombreLanzamiento ?anio ?duracion ?nombreGenero
+WHERE {
+    ?artista music:mbid_artista "a74b1b7f-71a5-4011-9441-d0b5e4122711" .
+    ?artista music:nombre_artista ?nombreArtista .
+
+    ?cancion a music:Cancion .
+    ?cancion music:interpretadoPor ?artista .
+    ?cancion music:titulo ?titulo .
+
+    OPTIONAL 
+    {
+        ?cancion music:perteneceALanzamiento ?lanzamiento .
+        ?lanzamiento music:nombre ?nombreLanzamiento .
+    }
+
+    OPTIONAL { ?cancion music:anio ?anio . }
+    OPTIONAL { ?cancion music:duracion ?duracion . }
+
+    OPTIONAL 
+    {
+        ?cancion music:tieneGeneroPrincipal ?genero .
+        ?genero music:nombre ?nombreGenero .
+    }
+}
+
+ORDER BY ?titulo
+LIMIT 50
+
+
+# ------------------------- CONSULTA 2 -------------------------
+# Canciones con género principal y minoritario.
+
+PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
+
+SELECT DISTINCT ?titulo ?nombreArtista ?nombrePrincipal ?nombreMinoritario
+WHERE {
+    ?cancion a music:Cancion .
+    ?cancion music:titulo ?titulo .
+    ?cancion music:interpretadoPor ?artista .
+    ?cancion music:tieneGeneroPrincipal ?generoPrincipal .
+    ?cancion music:tieneGeneroMinoritario ?generoMinoritario .
+
+    ?artista music:nombre_artista ?nombreArtista .
+    ?generoPrincipal music:nombre ?nombrePrincipal .
+    ?generoMinoritario music:nombre ?nombreMinoritario .
+
+    FILTER(?generoPrincipal != ?generoMinoritario)
+}
+
+ORDER BY ?titulo
+
+
+# ------------------------- CONSULTA 5 -------------------------
+# Géneros asociados a un artista mediante su MBID.
+
+PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
+
+SELECT DISTINCT ?nombreArtista ?nombreGenero
+WHERE {
+    ?artista music:mbid_artista "2f9ecbed-27be-40e6-abca-6de49d50299e" .
+    ?artista music:nombre_artista ?nombreArtista .
+    ?artista music:tieneGenero ?genero .
+
+    ?genero music:nombre ?nombreGenero .
+}
+
+ORDER BY ?nombreGenero
+
+
+# ------------------------- CONSULTA 6 -------------------------
+# Diez artistas con más canciones clasificadas como Rock.
+
+PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
+
+SELECT ?nombreArtista (COUNT(DISTINCT ?cancion) AS ?cantidadCanciones)
+WHERE {
+    ?genero music:nombre "Rock" .
+
+    ?cancion a music:Cancion .
+    ?cancion music:tieneGeneroPrincipal ?genero .
+    ?cancion music:interpretadoPor ?artista .
+
+    ?artista music:nombre_artista ?nombreArtista .
+}
+
+GROUP BY ?artista ?nombreArtista
+ORDER BY DESC(?cantidadCanciones) ?nombreArtista
+LIMIT 10
+
+
+# ------------------------- CONSULTA 8 -------------------------
+# Distribución de canciones por género y país o región.
+
+PREFIX music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#>
+
+SELECT ?nombreGenero ?paisRegion (COUNT(DISTINCT ?cancion) AS ?cantidadCanciones)
+WHERE {
+    ?cancion a music:Cancion .
+    ?cancion music:tieneGeneroPrincipal ?genero .
+    ?cancion music:interpretadoPor ?artista .
+
+    ?genero music:nombre ?nombreGenero .
+    ?artista music:asociadoALugar ?lugar .
+    ?lugar music:nombre ?paisRegion .
+}
+
+GROUP BY ?nombreGenero ?paisRegion
+ORDER BY DESC(?cantidadCanciones) ?nombreGenero ?paisRegion
