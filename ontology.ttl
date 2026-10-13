@@ -1,0 +1,187 @@
+@prefix music: <https://github.com/DanielRivera10000/Proyecto--Etapa-1-Semantic-Web-MISIS-/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+music:CancionClasificada a owl:Class ;
+    rdfs:label "Canción clasificada"@es ;
+    rdfs:comment "Canción que tiene al menos un género principal."@es ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( music:Cancion [ a owl:Restriction ;
+                        owl:onProperty music:tieneGeneroPrincipal ;
+                        owl:someValuesFrom music:GeneroMusical ] ) ] .
+
+music:anio a owl:DatatypeProperty ;
+    rdfs:label "año"@es ;
+    rdfs:comment "Año de la canción."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range xsd:integer .
+
+music:asociadoALugar a owl:ObjectProperty ;
+    rdfs:label "asociado a lugar"@es ;
+    rdfs:comment "Relaciona un artista con su país o región."@es ;
+    rdfs:domain music:Artista ;
+    rdfs:range music:Lugar .
+
+music:clasificacionAmbigua a owl:DatatypeProperty ;
+    rdfs:label "clasificación ambigua"@es ;
+    rdfs:comment "Indica si el genero de la canción es ambiguo."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range xsd:boolean .
+
+music:duracion a owl:DatatypeProperty,
+        owl:FunctionalProperty ;
+    rdfs:label "duración"@es ;
+    rdfs:comment "Duración de la canción en segundos."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range xsd:decimal .
+
+music:fecha_formacion a owl:DatatypeProperty ;
+    rdfs:label "fecha de formación"@es ;
+    rdfs:comment "Fecha de creación del grupo."@es ;
+    rdfs:domain music:Grupo ;
+    rdfs:range xsd:string .
+
+music:fecha_nacimiento a owl:DatatypeProperty ;
+    rdfs:label "fecha de nacimiento"@es ;
+    rdfs:comment "Fecha de nacimiento del artista."@es ;
+    rdfs:domain music:Persona ;
+    rdfs:range xsd:string .
+
+music:interpretadoPor a owl:ObjectProperty ;
+    rdfs:label "interpretado por"@es ;
+    rdfs:comment "Relaciona una canción con su artista."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range music:Artista ;
+    owl:inverseOf music:interpreta .
+
+music:mbid_artista a owl:DatatypeProperty ;
+    rdfs:label "identificador MusicBrainz"@es ;
+    rdfs:comment "Identificador MusicBrainz del artista."@es ;
+    rdfs:domain music:Artista ;
+    rdfs:range xsd:string .
+
+music:nombre a owl:DatatypeProperty ;
+    rdfs:label "nombre"@es ;
+    rdfs:comment "Nombre de un género, lugar, lanzamiento o fuente."@es ;
+    rdfs:range xsd:string .
+
+music:nombre_artista a owl:DatatypeProperty ;
+    rdfs:label "nombre del artista"@es ;
+    rdfs:comment "Nombre original del artista."@es ;
+    rdfs:domain music:Artista ;
+    rdfs:range xsd:string .
+
+music:nombre_musicbrainz a owl:DatatypeProperty ;
+    rdfs:label "nombre en MusicBrainz"@es ;
+    rdfs:comment "Nombre del artista en MusicBrainz."@es ;
+    rdfs:domain music:Artista ;
+    rdfs:range xsd:string .
+
+music:obtenidoDe a owl:ObjectProperty ;
+    rdfs:label "obtenido de"@es ;
+    rdfs:comment "Relaciona una canción o un artista con su fuente de información."@es ;
+    rdfs:range music:Fuente .
+
+music:perteneceALanzamiento a owl:ObjectProperty ;
+    rdfs:label "pertenece a lanzamiento"@es ;
+    rdfs:comment "Relaciona una canción con su lanzamiento."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range music:Lanzamiento ;
+    owl:inverseOf music:contieneCancion .
+
+music:tieneGenero a owl:ObjectProperty ;
+    rdfs:label "tiene género"@es ;
+    rdfs:comment "Relaciona un artista con un género musical."@es ;
+    rdfs:domain music:Artista ;
+    rdfs:range music:GeneroMusical .
+
+music:tieneGeneroMinoritario a owl:ObjectProperty ;
+    rdfs:label "tiene género minoritario"@es ;
+    rdfs:comment "Relaciona una canción con su género minoritario."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range music:GeneroMusical .
+
+music:tieneMismoTituloQue a owl:ObjectProperty,
+        owl:SymmetricProperty ;
+    rdfs:label "tiene el mismo título que"@es ;
+    rdfs:comment "Relaciona canciones que comparten título."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range music:Cancion .
+
+music:titulo a owl:DatatypeProperty ;
+    rdfs:label "título"@es ;
+    rdfs:comment "Título de la canción."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range xsd:string .
+
+music:url a owl:DatatypeProperty ;
+    rdfs:label "URL"@es ;
+    rdfs:comment "Dirección web de la fuente."@es ;
+    rdfs:domain music:Fuente ;
+    rdfs:range xsd:anyURI .
+
+music:Lugar a owl:Class ;
+    rdfs:label "Lugar"@es ;
+    rdfs:comment "País o región registrado para un artista."@es .
+
+music:Persona a owl:Class ;
+    rdfs:label "Persona"@es ;
+    rdfs:comment "Artista identificado como una persona individual."@es ;
+    rdfs:subClassOf music:Artista ;
+    owl:disjointWith music:Grupo .
+
+music:contieneCancion a owl:ObjectProperty ;
+    rdfs:label "contiene canción"@es ;
+    rdfs:comment "Relaciona un lanzamiento con una canción."@es ;
+    rdfs:domain music:Lanzamiento ;
+    rdfs:range music:Cancion .
+
+music:interpreta a owl:ObjectProperty ;
+    rdfs:label "interpreta"@es ;
+    rdfs:comment "Relaciona un artista con la canción que interpreta."@es ;
+    rdfs:domain music:Artista ;
+    rdfs:range music:Cancion .
+
+music:tieneGeneroPrincipal a owl:ObjectProperty ;
+    rdfs:label "tiene género principal"@es ;
+    rdfs:comment "Relaciona una canción con su género principal."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range music:GeneroMusical .
+
+music:track_id a owl:DatatypeProperty ;
+    rdfs:label "identificador de pista"@es ;
+    rdfs:comment "Identificador de la canción en el dataset."@es ;
+    rdfs:domain music:Cancion ;
+    rdfs:range xsd:string .
+
+music:Fuente a owl:Class ;
+    rdfs:label "Fuente"@es ;
+    rdfs:comment "Origen de los datos usados."@es .
+
+music:Grupo a owl:Class ;
+    rdfs:label "Grupo"@es ;
+    rdfs:comment "Artista identficado como un grupo musical de individuos."@es ;
+    rdfs:subClassOf music:Artista .
+
+music:Lanzamiento a owl:Class ;
+    rdfs:label "Lanzamiento"@es ;
+    rdfs:comment "Publicación a la que pertenece una canción."@es .
+
+music:GeneroMusical a owl:Class ;
+    rdfs:label "Género musical"@es ;
+    rdfs:comment "Categoría musical que se usa para clasificar una canción."@es .
+
+music:Artista a owl:Class ;
+    rdfs:label "Artista"@es ;
+    rdfs:comment "Persona o grupo que interpreta una canción."@es .
+
+music:Cancion a owl:Class ;
+    rdfs:label "Canción"@es ;
+    rdfs:comment "Pista musical identificada por un track_id."@es ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:cardinality "1"^^xsd:nonNegativeInteger ;
+            owl:onProperty music:track_id ] ;
+    owl:disjointWith music:Artista .
+
