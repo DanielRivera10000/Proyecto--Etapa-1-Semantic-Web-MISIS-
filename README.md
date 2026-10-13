@@ -64,3 +64,7 @@ Las cinco consultas están en `Consultas/consultas.sparql`
 2. Copiar una consulta a la vez.
 3. Pegarla en la pestaña `Query` del dataset `musica` y ejecutarla.
 4. Comparar los resultados con `Resultados Consultas.pdf`.
+
+
+## NOTA
+Para la Etapa 2, se incorporó Tagtraum CD2 como una segunda fuente de enriquecimiento, agregando información sobre géneros musicales principales y minoritarios de las canciones, además de identificar clasificaciones ambiguas. Se conservó la información original y se ampliaron los datos disponibles para construir la ontología y sus instancias RDF.
